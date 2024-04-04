@@ -1,14 +1,11 @@
-import math
-
 import pygame
-from pygame import Vector2, Color, Rect
+from pygame import Color, Rect
 
-from button import button
-from cursor_pos import draw_cursor_pos
-from draw_vector import draw_vector
-from new_object_menu import menu_create_object
-from scale_size import render_scale
-from colors import neutral_color, confirm_color
+from visual_elements.button import button
+from visual_elements.cursor_pos import draw_cursor_pos
+from visual_elements.new_object_menu import menu_create_object
+from visual_elements.scale_size import render_scale
+from colors import confirm_color
 
 # pygame setup
 pygame.init()
@@ -45,11 +42,10 @@ while running:
     is_clicked = pygame.mouse.get_pressed()[0]
     rect_pos = [screen_size[0] - 150, 10]
     rect_size = [140, 40]
-    button(screen=screen,cursor_pos=cursor_pos, text="Clear All", color=confirm_color, font=font, rect_info=Rect(screen_size[0] - 150, 60, 140, 40), function="")
+    button(screen=screen, cursor_pos=cursor_pos, text="Clear All", color=confirm_color, font=font,
+           rect_info=Rect(screen_size[0] - 150, 60, 140, 40), function="")
 
-
-
-    if menu_opened == True:
+    if menu_opened:
         menu_create_object(screen=screen, screen_size=screen_size, cursor_pos=menu_position)
     else:
         pass
@@ -58,8 +54,5 @@ while running:
     # Updates Screen !
     pygame.display.flip()
     clock.tick(tickrate)  # limits FPS to 60
-
-
-
 
 pygame.quit()

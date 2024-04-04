@@ -4,14 +4,14 @@ from pygame import Color, Vector2
 from pygame.draw import line
 
 
-def draw_vector(screen, start_pos, length, angle): # (length^2)/2 = x^2
+def draw_vector(screen, start_pos, length, angle):  # (length^2)/2 = x^2
     x = math.cos(angle) * length
     y = math.sin(angle) * length
     end_pos = Vector2(start_pos.x + x, start_pos.y - y)
     line(surface=screen, color=Color(255, 255, 255), start_pos=start_pos,
-                     end_pos=end_pos, width=1)
+         end_pos=end_pos, width=1)
 
-    arrow_1_angle = -(angle - math.pi/6 + math.pi)
+    arrow_1_angle = -(angle - math.pi / 6 + math.pi)
     arrow_2_angle = -(angle + math.pi / 6 + math.pi)
 
     arrow_1_x = math.cos(arrow_1_angle) * 20
