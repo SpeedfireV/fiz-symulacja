@@ -8,13 +8,16 @@ from draw_vector import draw_vector
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080))
+display_info = pygame.display.Info()
+screen_size = display_info.current_w, display_info.current_h
+screen = pygame.display.set_mode(screen_size)
 clock = pygame.time.Clock()
 running = True
 i = 10
 pygame.mouse.set_visible(False)
 pygame.font.init()
 font = pygame.font.SysFont('Times New Roman', 30)
+
 while running:
 
     # poll for events
@@ -28,8 +31,10 @@ while running:
     screen.fill(Color(20, 20, 20))
     pygame.draw.circle(screen, Color("red"), cursor_pos, radius=3)
 
-    draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=7*math.pi/4)
-    draw_cursor_pos(screen=screen,font=font, cursor_pos=cursor_pos)
+    draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=3*math.pi/2)
+    draw_cursor_pos(screen=screen,screen_size=screen_size,font=font, cursor_pos=cursor_pos)
+
+    is_clicked = pygame.mouse.get_pressed()[0]
 
     # RENDER YOUR GAME HERE
 
