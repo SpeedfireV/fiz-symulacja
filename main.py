@@ -1,11 +1,14 @@
 import math
 
 import pygame
-from pygame import Vector2, Color
+from pygame import Vector2, Color, Rect
 
+from button import button
 from cursor_pos import draw_cursor_pos
 from draw_vector import draw_vector
+from new_object_menu import menu_create_object
 from scale_size import render_scale
+from colors import neutral_color, confirm_color
 
 # pygame setup
 pygame.init()
@@ -16,34 +19,47 @@ clock = pygame.time.Clock()
 running = True
 pygame.mouse.set_visible(False)
 pygame.font.init()
-font = pygame.font.SysFont('Times New Roman', 30)
-tickrate = 60
+font = pygame.font.SysFont('Times New Roman', 24)
+tickrate = 180
 current_scale = 100
+objects = []
+menu_opened = False
+menu_position = []
 while running:
-
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+    cursor_pos = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 print("Left Mouse Button Clicked!")
+                menu_opened = True
+                menu_position = cursor_pos
+
         if event.type == pygame.QUIT:
             running = False
 
-    # fill the screen with a color to wipe away anything from last frame
-    cursor_pos = pygame.mouse.get_pos()
     screen.fill(Color(20, 20, 20))
-    pygame.draw.circle(screen, Color("red"), cursor_pos, radius=3)
 
-    draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=3*math.pi/2)
-    draw_cursor_pos(screen=screen,screen_size=screen_size,font=font, cursor_pos=cursor_pos)
+    # draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=3*math.pi/2)
+    draw_cursor_pos(screen=screen, screen_size=screen_size, font=font, cursor_pos=cursor_pos)
     render_scale(screen=screen, screen_size=screen_size, max_difference=100)
     is_clicked = pygame.mouse.get_pressed()[0]
+    rect_pos = [screen_size[0] - 150, 10]
+    rect_size = [140, 40]
+    button(screen=screen,cursor_pos=cursor_pos, text="Clear All", color=confirm_color, font=font, rect_info=Rect(screen_size[0] - 150, 60, 140, 40), function="")
 
-    # RENDER YOUR GAME HERE
 
-    # flip() the display to put your work on screen
+
+    if menu_opened == True:
+        menu_create_object(screen=screen, screen_size=screen_size, cursor_pos=menu_position)
+    else:
+        pass
+
+    pygame.draw.circle(screen, Color(10, 190, 245), cursor_pos, radius=5)
+    # Updates Screen !
     pygame.display.flip()
     clock.tick(tickrate)  # limits FPS to 60
+
+
+
 
 pygame.quit()

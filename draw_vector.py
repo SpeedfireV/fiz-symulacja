@@ -1,5 +1,4 @@
 import math
-from math import sqrt
 
 from pygame import Color, Vector2
 from pygame.draw import line
