@@ -3,6 +3,7 @@ import math
 import pygame
 from pygame import Color, Rect, Vector2
 
+from entering_text import entering_numbers
 from objects.object import calculate_cartesian_velocities
 from visual_elements.button import render_button
 from visual_elements.text_frame import render_text_frame
@@ -37,9 +38,17 @@ menu_position = []
 add_object_button_hovered = False
 clear_button_hovered = False
 editing = False
+
+hovering_object_velocity = False
+object_velocity = ""
+entering_object_velocity = False
+
 hovering_object_mass = False
 object_mass = ""
 entering_object_mass = False
+timer = 0
+
+
 while running:
     cursor_pos = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -55,6 +64,8 @@ while running:
                 elif hovering_object_mass:
                     entering_object_mass = True
                     print("Entering Object Mass")
+                elif hovering_object_velocity:
+                    entering_object_velocity = True
         else:
             mouse_clicked = False
         if event.type == pygame.KEYDOWN:
@@ -63,33 +74,14 @@ while running:
                 entering_object_mass = False
                 print("Enter Clicked")
             elif event.key == pygame.K_BACKSPACE:
-
                 print("Backspace Clicked")
             elif event.key == pygame.K_ESCAPE:
                 print("Escape Clicked")
-            elif event.key == pygame.K_1:
-                object_mass += "1"
-            elif event.key == pygame.K_2:
-                object_mass += "2"
-            elif event.key == pygame.K_3:
-                object_mass += "3"
-            elif event.key == pygame.K_4:
-                object_mass += "4"
-            elif event.key == pygame.K_5:
-                object_mass += "5"
-            elif event.key == pygame.K_6:
-                object_mass += "6"
-            elif event.key == pygame.K_7:
-                object_mass += "7"
-            elif event.key == pygame.K_8:
-                object_mass += "8"
-            elif event.key == pygame.K_9:
-                object_mass += "9"
-            elif event.key == pygame.K_0:
-                object_mass += "0"
-
             else:
-                pass
+                if entering_object_mass:
+                    object_mass += entering_numbers(event.key)
+                elif entering_object_velocity:
+                    object_velocity += entering_numbers(event.key)
 
 
         if event.type == pygame.QUIT:
@@ -111,9 +103,9 @@ while running:
     hovering_object_mass = text_input(screen=screen, cursor_pos=cursor_pos, text="Select Mass",
                                       color=neutral_color, font=font,
                                       rect_info=Rect(screen_size[0] - 210, screen_size[1] - 190, 200, 40), fill_color= Color(100, 100, 150), active=entering_object_mass, entered_text=object_mass)
-    velocity = render_button(screen=screen, cursor_pos=cursor_pos, text="Select Velocity",
-                                              color=neutral_color, font=font,
-                                              rect_info=Rect(screen_size[0] - 210, screen_size[1] - 240, 200, 40))
+    hovering_object_velocity =text_input(screen=screen, cursor_pos=cursor_pos, text="Select Velocity",
+                                      color=neutral_color, font=font,
+                                      rect_info=Rect(screen_size[0] - 210, screen_size[1] - 240, 200, 40), fill_color= Color(100, 100, 150), active=entering_object_velocity, entered_text=object_velocity)
     angle = render_button(screen=screen, cursor_pos=cursor_pos, text="Select Angle",
                                               color=neutral_color, font=font,
                                               rect_info=Rect(screen_size[0] - 210, screen_size[1] - 290, 200, 40))
