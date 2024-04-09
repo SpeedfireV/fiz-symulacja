@@ -7,7 +7,7 @@ from pygame.font import Font
 from objects.object import SpaceObject
 
 
-def render_button(screen, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect):
+def render_button(screen,button_name, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect):
     text_surface = font.render(text, True, Color(255, 255, 255))
     text_info = text_surface.get_rect().width, text_surface.get_rect().height
     button_maximums = [rect_info.x, rect_info.x + rect_info.width, rect_info.y, rect_info.y + rect_info.height]
@@ -17,13 +17,13 @@ def render_button(screen, cursor_pos, text: str, color: Color, font: Font, rect_
         pygame.draw.rect(surface=screen, color=color, rect=rect_info, width=100)
         screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                    rect_info.y + rect_info.height / 2 - text_info[1] / 2])
-        return True # If Hovered
+        return button_name # If Hovered
 
     else:
         pygame.draw.rect(surface=screen, color=color, rect=rect_info, width=3)
         screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                    rect_info.y + rect_info.height / 2 - text_info[1] / 2])
-        return False # If Not Hovered
+        return None # If Not Hovered
 
 
 

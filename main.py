@@ -3,8 +3,10 @@ import math
 import pygame
 from pygame import Color, Rect, Vector2
 
+from buttons import return_buttons
 from entering_text import entering_numbers
 from objects.object import calculate_cartesian_velocities
+from objects.text_input_controller import TextInputController
 from visual_elements.button import render_button
 from visual_elements.text_frame import render_text_frame
 from visual_elements.draw_vector import draw_vector
@@ -39,16 +41,10 @@ add_object_button_hovered = False
 clear_button_hovered = False
 editing = False
 
-hovering_object_velocity = False
-object_velocity = ""
-entering_object_velocity = False
-
-hovering_object_mass = False
-object_mass = ""
-entering_object_mass = False
 timer = 0
 
-
+text_controller = TextInputController()
+hovering_button = ""
 while running:
     cursor_pos = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -61,27 +57,16 @@ while running:
                     print("Add Object")
                 elif clear_button_hovered:
                     print("Clear Objects")
-                elif hovering_object_mass:
-                    entering_object_mass = True
-                    print("Entering Object Mass")
-                elif hovering_object_velocity:
-                    entering_object_velocity = True
         else:
             mouse_clicked = False
         if event.type == pygame.KEYDOWN:
-            print(object_mass)
             if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                entering_object_mass = False
+                text_controller.end_input()
                 print("Enter Clicked")
             elif event.key == pygame.K_BACKSPACE:
                 print("Backspace Clicked")
             elif event.key == pygame.K_ESCAPE:
                 print("Escape Clicked")
-            else:
-                if entering_object_mass:
-                    object_mass += entering_numbers(event.key)
-                elif entering_object_velocity:
-                    object_velocity += entering_numbers(event.key)
 
 
         if event.type == pygame.QUIT:
@@ -95,23 +80,13 @@ while running:
     is_clicked = pygame.mouse.get_pressed()[0]
     rect_pos = [screen_size[0] - 150, 10]
     rect_size = [140, 40]
-    clear_button_hovered = render_button(screen=screen, cursor_pos=cursor_pos, text="Clear All", color=delete_color, font=font,
-                                         rect_info=Rect(screen_size[0] - 150, 60, 140, 40))
-    selecting_object_position = render_button(screen=screen, cursor_pos=cursor_pos, text="Select Position",
-                                              color=neutral_color, font=font,
-                                              rect_info=Rect(screen_size[0] - 210, screen_size[1] - 140, 200, 40))
-    hovering_object_mass = text_input(screen=screen, cursor_pos=cursor_pos, text="Select Mass",
-                                      color=neutral_color, font=font,
-                                      rect_info=Rect(screen_size[0] - 210, screen_size[1] - 190, 200, 40), fill_color= Color(100, 100, 150), active=entering_object_mass, entered_text=object_mass)
-    hovering_object_velocity =text_input(screen=screen, cursor_pos=cursor_pos, text="Select Velocity",
-                                      color=neutral_color, font=font,
-                                      rect_info=Rect(screen_size[0] - 210, screen_size[1] - 240, 200, 40), fill_color= Color(100, 100, 150), active=entering_object_velocity, entered_text=object_velocity)
-    angle = render_button(screen=screen, cursor_pos=cursor_pos, text="Select Angle",
-                                              color=neutral_color, font=font,
-                                              rect_info=Rect(screen_size[0] - 210, screen_size[1] - 290, 200, 40))
-    add_object_button_hovered = render_button(screen=screen, cursor_pos=cursor_pos, text="Add Object",
-                                              color=confirm_color, font=font,
-                                              rect_info=Rect(screen_size[0] - 210, screen_size[1] - 80, 200, 50))
+    # Buttons
+    buttons = return_buttons(screen=screen, cursor_pos=cursor_pos, screen_size=screen_size, font=font, controller=text_controller)
+
+    for button in buttons:
+        if button is not None:
+            text_controller.change_input(button)
+            break
 
     if menu_opened:
         menu_create_object(screen=screen, screen_size=screen_size, cursor_pos=menu_position)
@@ -122,5 +97,6 @@ while running:
     # Updates Screen !
     pygame.display.flip()
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
+    print(text_controller.selected)
 
 pygame.quit()

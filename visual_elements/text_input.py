@@ -1,7 +1,7 @@
 import pygame
 from pygame import Color, Rect
 from pygame.font import Font
-def text_input(screen, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect, fill_color: Color, active:bool, entered_text:str):
+def text_input(screen, input_name, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect, fill_color: Color, active:bool, entered_text:str):
 
 
     if active:
@@ -25,7 +25,7 @@ def text_input(screen, cursor_pos, text: str, color: Color, font: Font, rect_inf
         pygame.draw.rect(surface=screen, color=color, rect=rect_info, width=1000)
         screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                    rect_info.y + rect_info.height / 2 - text_info[1] / 2])
-        return True  # If Hovered
+        return input_name  # If Hovered
 
     else:
         if active:
@@ -37,4 +37,4 @@ def text_input(screen, cursor_pos, text: str, color: Color, font: Font, rect_inf
 
         screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                    rect_info.y + rect_info.height / 2 - text_info[1] / 2])
-        return False  # If Not Hovered
+        return None  # If Not Hovered
