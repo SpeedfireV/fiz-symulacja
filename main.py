@@ -2,8 +2,9 @@ import pygame
 from pygame import Color
 
 from buttons import return_buttons
+from entering_text import entering_numbers
 from objects.text_input_controller import TextInputController
-from visual_elements.new_object_menu import menu_create_object
+from visual_elements.render_planets import render_planets
 from visual_elements.scale_size import render_scale
 from visual_elements.text_frame import render_text_frame
 
@@ -25,45 +26,44 @@ font = pygame.font.SysFont('Times New Roman', 24)
 tickrate = 180
 # Galaxy Scale
 current_scale = 100
-# Menu
-menu_opened = False
-menu_position = []
-# Buttons Info
-add_object_button_hovered = False
-clear_button_hovered = False
-editing = False
-
-timer = 0
+objects = []
 
 text_controller = TextInputController()
-hovering_button = ""
 while running:
     cursor_pos = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
-                menu_opened = True
-                menu_position = cursor_pos
-                mouse_clicked = True
-                if add_object_button_hovered:
-                    print("Add Object")
-                elif clear_button_hovered:
-                    print("Clear Objects")
+                if text_controller.hovered is not None:
+                    # Submit Current State
+                    text_controller.submit()
+                    # Select New State
+                    text_controller.select()
+                else:
+                    text_controller.submit()
+
+                if text_controller.selected == 'clear_all':
+                    objects = []
+
+
         else:
             mouse_clicked = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                text_controller.end_input()
-                print("Enter Clicked")
-            elif event.key == pygame.K_BACKSPACE:
-                print("Backspace Clicked")
-            elif event.key == pygame.K_ESCAPE:
+            event_key = event.key
+            if event_key == pygame.K_RETURN or event_key == pygame.K_SPACE:
+                text_controller.submit()
+            elif event_key== pygame.K_BACKSPACE:
+                text_controller.backspace()
+            elif event_key == pygame.K_ESCAPE:
                 print("Escape Clicked")
+            elif entering_numbers(event_key) is not None:
+                text_controller.key_pressed(entering_numbers(event_key))
 
         if event.type == pygame.QUIT:
             running = False
 
     screen.fill(Color(20, 20, 20))
+
 
     # draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=3*math.pi/2)
     render_text_frame(screen=screen, screen_size=screen_size, font=font, text=f'{cursor_pos[0]}, {cursor_pos[1]}')
@@ -79,16 +79,16 @@ while running:
         if button is not None:
             text_controller.change_input(button)
             break
-
-    if menu_opened:
-        menu_create_object(screen=screen, screen_size=screen_size, cursor_pos=menu_position)
     else:
-        pass
+        text_controller.stopped_hovering()
 
+    if text_controller.selected == 'add_object' and text_controller.fulfilled:
+        objects.append(text_controller.return_object())
+        text_controller.reset()
+    render_planets(screen=screen, objects=objects)
     pygame.draw.circle(screen, Color(10, 190, 245), cursor_pos, radius=5)
     # Updates Screen !
     pygame.display.flip()
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
-    print(text_controller.selected)
 
 pygame.quit()
