@@ -25,7 +25,7 @@ font = pygame.font.SysFont('Times New Roman', 24)
 # Simulation Tickrate
 tickrate = 180
 # Galaxy Scale
-current_scale = 100
+current_scale = 100000
 objects = []
 
 text_controller = TextInputController()
@@ -66,7 +66,7 @@ while running:
 
 
     # draw_vector(screen=screen, start_pos=Vector2(500, 500), length=100, angle=3*math.pi/2)
-    render_text_frame(screen=screen, screen_size=screen_size, font=font, text=f'{cursor_pos[0]}, {cursor_pos[1]}')
+    render_text_frame(screen=screen, scale=current_scale,screen_size=screen_size, font=font, x_cursor_pos=cursor_pos[0], y_cursor_pos=cursor_pos[1])
     render_scale(screen=screen, screen_size=screen_size, max_difference=100)
     is_clicked = pygame.mouse.get_pressed()[0]
     rect_pos = [screen_size[0] - 150, 10]
@@ -85,7 +85,7 @@ while running:
     if text_controller.selected == 'add_object' and text_controller.fulfilled:
         objects.append(text_controller.return_object())
         text_controller.reset()
-    render_planets(screen=screen,scale=100000, objects=objects)
+    render_planets(screen=screen, font=font, scale=current_scale, objects=objects)
     pygame.draw.circle(screen, Color(10, 190, 245), cursor_pos, radius=5)
     # Updates Screen !
     pygame.display.flip()

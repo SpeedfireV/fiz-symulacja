@@ -24,6 +24,6 @@ def entering_numbers(event_key):
         return "0"
     elif event_key == pygame.K_MINUS:
         return "-"
-    elif event_key == pygame.K_MINUS:
+    elif event_key == pygame.K_PERIOD:
         return "."
     return ""

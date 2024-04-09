@@ -12,11 +12,12 @@ def calculate_cartesian_velocities(velocity, angle):
 
 class SpaceObject:
     def __init__(self, x: float, y: float, mass: float, velocity: float, angle: float):
+        self.name = "Nazwa" #TODO: Nazwa działa
         self.x = x
         self.y = y
         self.mass = mass
         self.velocity = velocity
-        self.angle = angle
+        self.angle = angle * math.pi
         self.G = gravitational_constant
 
     def __str__(self):
@@ -37,6 +38,6 @@ class SpaceObject:
         resultant_angle: float = atan(tangens)  # Calculate Angle In Radians
         self.velocity, self.angle = resultant_velocity, resultant_angle
 
-    def change_position(self, fps):  # TODO: Change position
+    def change_position(self, fps):
         self.x = self.x + self.velocity * math.cos(self.angle) / fps
         self.y = self.y + self.velocity * math.sin(self.angle) / fps
