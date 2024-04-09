@@ -1,9 +1,10 @@
 import pygame
 from pygame import Color, Rect
 from pygame.font import Font
-def text_input(screen, input_name, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect, fill_color: Color, active:bool, entered_text:str):
 
 
+def text_input(screen, input_name, cursor_pos, text: str, color: Color, font: Font, rect_info: Rect, fill_color: Color,
+               active: bool, entered_text: str):
     if active:
         text_color = Color(255, 255, 255)
         color = fill_color
@@ -32,8 +33,6 @@ def text_input(screen, input_name, cursor_pos, text: str, color: Color, font: Fo
             pygame.draw.rect(surface=screen, color=color, rect=rect_info, width=1000)
         else:
             pygame.draw.rect(surface=screen, color=color, rect=rect_info, width=3)
-
-
 
         screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                    rect_info.y + rect_info.height / 2 - text_info[1] / 2])

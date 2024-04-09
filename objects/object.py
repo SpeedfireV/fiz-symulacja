@@ -2,13 +2,10 @@ from scipy.constants import gravitational_constant
 from math import cos, sin, atan, sqrt
 
 
-
-
 def calculate_cartesian_velocities(velocity, angle):
     x_velocity = velocity * cos(angle)
     y_velocity = velocity * sin(angle)
     return x_velocity, y_velocity
-
 
 
 class SpaceObject:
@@ -37,6 +34,6 @@ class SpaceObject:
         tangens = y_resultant_velocity / x_resultant_velocity  # Calculate Tangens Value
         resultant_angle: float = atan(tangens)  # Calculate Angle In Radians
         return resultant_velocity, resultant_angle
-    def change_position(self): # TODO: Change position
-        pass
 
+    def change_position(self):  # TODO: Change position
+        pass

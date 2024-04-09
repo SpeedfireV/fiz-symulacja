@@ -12,4 +12,3 @@ def render_text_frame(screen, screen_size, font: Font, text):
     text_info = text_surface.get_rect().width, text_surface.get_rect().height
     screen.blit(text_surface, [rect_info.x + rect_info.width / 2 - text_info[0] / 2,
                                rect_info.y + rect_info.height / 2 - text_info[1] / 2])
-

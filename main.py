@@ -1,19 +1,11 @@
-import math
-
 import pygame
-from pygame import Color, Rect, Vector2
+from pygame import Color
 
 from buttons import return_buttons
-from entering_text import entering_numbers
-from objects.object import calculate_cartesian_velocities
 from objects.text_input_controller import TextInputController
-from visual_elements.button import render_button
-from visual_elements.text_frame import render_text_frame
-from visual_elements.draw_vector import draw_vector
 from visual_elements.new_object_menu import menu_create_object
 from visual_elements.scale_size import render_scale
-from colors import confirm_color, delete_color, neutral_color
-from visual_elements.text_input import text_input
+from visual_elements.text_frame import render_text_frame
 
 # pygame setup
 pygame.init()
@@ -68,7 +60,6 @@ while running:
             elif event.key == pygame.K_ESCAPE:
                 print("Escape Clicked")
 
-
         if event.type == pygame.QUIT:
             running = False
 
@@ -81,7 +72,8 @@ while running:
     rect_pos = [screen_size[0] - 150, 10]
     rect_size = [140, 40]
     # Buttons
-    buttons = return_buttons(screen=screen, cursor_pos=cursor_pos, screen_size=screen_size, font=font, controller=text_controller)
+    buttons = return_buttons(screen=screen, cursor_pos=cursor_pos, screen_size=screen_size, font=font,
+                             controller=text_controller)
 
     for button in buttons:
         if button is not None:
