@@ -1,3 +1,5 @@
+import math
+
 from scipy.constants import gravitational_constant
 from math import cos, sin, atan, sqrt
 
@@ -9,7 +11,7 @@ def calculate_cartesian_velocities(velocity, angle):
 
 
 class SpaceObject:
-    def __init__(self, x: int, y: int, mass: float, velocity: float, angle: float):
+    def __init__(self, x: float, y: float, mass: float, velocity: float, angle: float):
         self.x = x
         self.y = y
         self.mass = mass
@@ -33,7 +35,8 @@ class SpaceObject:
         resultant_velocity: float = sqrt(x_resultant_velocity ** 2 + y_resultant_velocity ** 2)  # Pythagorean Triangle
         tangens = y_resultant_velocity / x_resultant_velocity  # Calculate Tangens Value
         resultant_angle: float = atan(tangens)  # Calculate Angle In Radians
-        return resultant_velocity, resultant_angle
+        self.velocity, self.angle = resultant_velocity, resultant_angle
 
-    def change_position(self):  # TODO: Change position
-        pass
+    def change_position(self, fps):  # TODO: Change position
+        self.x = self.x + self.velocity * math.cos(self.angle) / fps
+        self.y = self.y + self.velocity * math.sin(self.angle) / fps

@@ -22,4 +22,8 @@ def entering_numbers(event_key):
         return "9"
     elif event_key == pygame.K_0:
         return "0"
+    elif event_key == pygame.K_MINUS:
+        return "-"
+    elif event_key == pygame.K_MINUS:
+        return "."
     return ""

@@ -52,7 +52,7 @@ while running:
             event_key = event.key
             if event_key == pygame.K_RETURN or event_key == pygame.K_SPACE:
                 text_controller.submit()
-            elif event_key== pygame.K_BACKSPACE:
+            elif event_key == pygame.K_BACKSPACE:
                 text_controller.backspace()
             elif event_key == pygame.K_ESCAPE:
                 print("Escape Clicked")
@@ -85,10 +85,18 @@ while running:
     if text_controller.selected == 'add_object' and text_controller.fulfilled:
         objects.append(text_controller.return_object())
         text_controller.reset()
-    render_planets(screen=screen, objects=objects)
+    render_planets(screen=screen,scale=100000, objects=objects)
     pygame.draw.circle(screen, Color(10, 190, 245), cursor_pos, radius=5)
     # Updates Screen !
     pygame.display.flip()
+    new_objects = []
+    for object in objects:
+        new_object = object
+        new_object.change_position(tickrate)
+        new_objects.append(new_object)
+    else:
+        objects = new_objects
+
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
 
 pygame.quit()
