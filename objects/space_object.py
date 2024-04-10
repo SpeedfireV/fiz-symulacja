@@ -1,13 +1,16 @@
 import math
+import random
+from math import cos, sin, sqrt
 
+from pygame import Color
 from scipy.constants import gravitational_constant
-from math import cos, sin, atan, sqrt
 
 
 def calculate_cartesian_velocities(velocity, angle):
     x_velocity = velocity * cos(angle)
     y_velocity = velocity * sin(angle)
     return x_velocity, y_velocity
+
 
 def calculate_by_distance_angle(x, y):
     if x == 0:
@@ -23,27 +26,29 @@ def calculate_by_distance_angle(x, y):
     tangens = y / x
     angle = math.atan(tangens)
 
-    if x > 0 and y > 0: # I
+    if x > 0 and y > 0:  # I
         pass
-    elif x < 0 and y > 0: # II
+    elif x < 0 < y:  # II
 
         angle = math.pi + angle
-    elif x < 0 and y < 0: # III
+    elif x < 0 and y < 0:  # III
 
         angle = math.pi + angle
-    elif x > 0 and y < 0: # IV
+    elif x > 0 > y:  # IV
 
         angle = 2 * math.pi + angle
     while angle > math.pi * 2:
         angle -= 2 * math.pi
     return angle
+
+
 def calculate_two_point_angle(first_point, second_point):
     x = second_point[0] - first_point[0]
     y = second_point[1] - first_point[1]
-    return calculate_by_distance_angle(x,y)
+    return calculate_by_distance_angle(x, y)
+
 
 # print(calculate_by_distance_angle(-50,-100))
-
 
 
 class SpaceObject:
@@ -55,16 +60,19 @@ class SpaceObject:
         self.velocity = velocity
         self.angle = angle * math.pi
         self.G = gravitational_constant
+        self.color = Color(random.randint(0, 85), random.randint(86, 170), random.randint(171, 255))
 
     def __str__(self):
-        return (f"Coordinates of {self.name}: {self.x} x {self.y}, the mass is equal to {self.mass}, the velocity is {self.velocity}"
-                f" and the angle is {self.angle} pi")
+        return (
+            f"Coordinates of {self.name}: {self.x} x {self.y}, the mass is equal to {self.mass}, the velocity is {self.velocity}"
+            f" and the angle is {self.angle} pi")
 
     def calculate_distance(self, other_object):
         return math.sqrt((self.x - other_object.x) ** 2 + (self.y - other_object.y) ** 2)
+
     def calculate_new_velocity(self, other_object, fps: int):
         distance = self.calculate_distance(other_object)
-        if distance < 1:
+        if distance < 50:
             return None
         acceleration = (self.G * other_object.mass) / pow(distance, 2)  # a = GM/R^2
         added_velocity = acceleration * (1 / fps)  # [a] = m/s^2 | 60 FPS => 1/60 * a
@@ -75,7 +83,6 @@ class SpaceObject:
 
         added_x_velocity = cos(objects_angle) * added_velocity
         added_y_velocity = sin(objects_angle) * added_velocity
-
 
         resultant_x_velocity = x_velocity + added_x_velocity
         resultant_y_velocity = y_velocity + added_y_velocity
