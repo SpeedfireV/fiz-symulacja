@@ -1,7 +1,7 @@
 import pygame
 
 
-def entering_numbers(event_key):
+def entering_numbers(event_unicode, event_key):
     if event_key == pygame.K_1:
         return "1"
     elif event_key == pygame.K_2:
@@ -26,4 +26,4 @@ def entering_numbers(event_key):
         return "-"
     elif event_key == pygame.K_PERIOD:
         return "."
-    return ""
+    return event_unicode

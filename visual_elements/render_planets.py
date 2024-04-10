@@ -1,7 +1,7 @@
 import pygame
 from pygame import Color
 
-from objects.object import SpaceObject
+from objects.space_object import SpaceObject
 
 
 def render_planets(screen, font, scale, objects: list[SpaceObject]):

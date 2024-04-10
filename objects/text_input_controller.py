@@ -1,4 +1,4 @@
-from objects.object import SpaceObject
+from objects.space_object import SpaceObject
 
 
 class TextInputController:
@@ -6,6 +6,7 @@ class TextInputController:
         self.hovered = None
         self.selected = None
         self.fulfilled = False
+        self.name_text = ""
         self.velocity_text = ""
         self.mass_text = ""
         self.angle_text = ""
@@ -28,8 +29,12 @@ class TextInputController:
             self.position_x_text += key
         elif self.selected == 'select_position_y':
             self.position_y_text += key
+        elif self.selected == 'select_name':
+            self.name_text += key
     def backspace(self):
-        if self.selected == 'select_velocity':
+        if self.selected == "select_name":
+            self.name_text = self.name_text[:len(self.name_text) - 1]
+        elif self.selected == 'select_velocity':
             self.velocity_text = self.velocity_text[:len(self.velocity_text) - 1]
         elif self.selected == 'select_mass':
             self.mass_text = self.mass_text[:len(self.mass_text) - 1]
@@ -46,18 +51,19 @@ class TextInputController:
         self.selected = self.hovered
 
     def check_fulfilment(self):
-        if self.mass_text != "" and self.angle_text != "" and self.velocity_text != "" and self.position_x_text != "" and self.position_y_text != "":
+        if self.name_text != "" and self.mass_text != "" and self.angle_text != "" and self.velocity_text != "" and self.position_x_text != "" and self.position_y_text != "":
             self.fulfilled = True
         else:
             self.fulfilled = False
 
     def return_object(self):
-        return SpaceObject(x=int(self.position_x_text), y=int(self.position_y_text), mass=float(self.mass_text), velocity=float(self.velocity_text),angle=float(self.angle_text))
+        return SpaceObject(name=self.name_text, x=int(self.position_x_text), y=int(self.position_y_text), mass=float(self.mass_text), velocity=float(self.velocity_text),angle=float(self.angle_text))
 
     def reset(self):
         self.hovered = None
         self.selected = None
         self.fulfilled = False
+        self.name_text = ""
         self.velocity_text = ""
         self.mass_text = ""
         self.angle_text = ""
