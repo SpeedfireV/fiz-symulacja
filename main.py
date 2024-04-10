@@ -28,7 +28,7 @@ mouse_clicked = False
 pygame.font.init()
 font = pygame.font.SysFont('Times New Roman', 24)
 # Simulation Tickrate
-tickrate = 10
+tickrate = 60
 # Galaxy Scale
 current_scale = 1000
 objects = []
@@ -113,7 +113,6 @@ while running:
     else:
         objects = new_objects
     for object in objects:
-        print(str(object))
         object.change_position(tickrate)
 
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
