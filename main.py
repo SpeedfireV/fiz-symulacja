@@ -3,6 +3,7 @@ from pygame import Color
 
 from buttons import return_buttons, render_text_simulation_speed
 from calculate_geographical_position import calculate_geographical_position
+from charts.distance_from_zero import draw_distance_from_zero
 from entering_text import entering_numbers
 from objects.simulation_controller import SimulationController
 from objects.text_input_controller import TextInputController
@@ -20,8 +21,8 @@ screen_size = display_info.current_w - 1, display_info.current_h - 1
 screen = pygame.display.set_mode(screen_size)
 x_half_of_screen = screen.get_rect().center[0]
 y_half_of_screen = screen.get_rect().center[1]
-x_border = 50
-y_border = 70
+x_border = 0
+y_border = 0
 # Mouse
 pygame.mouse.set_visible(False)
 mouse_clicked = False
@@ -31,12 +32,16 @@ font = pygame.font.SysFont('Times New Roman', 22)
 # Simulation Tickrate
 tickrate = 60
 # Galaxy Scale
-current_scale = 1_000_000_000
+current_scale = 1_000
 objects = []
 
 364_397_000
 text_controller = TextInputController()
 simulation_speed_controller = SimulationController()
+i = 1
+
+distance_from_zero = {}
+
 while running:
     cursor_pos = pygame.mouse.get_pos()
     x_cursor_pos, y_cursor_pos = cursor_pos[0], cursor_pos[1]
@@ -48,10 +53,31 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 if text_controller.hovered is not None:
-                    # Submit Current State
-                    text_controller.submit()
-                    # Select New State
-                    text_controller.select()
+                    if text_controller.hovered == "*2x" or text_controller.hovered == "/2x" or text_controller.hovered == "double_increase_speed" or text_controller.hovered == "double_decrease_speed" or text_controller.hovered == "increase_speed" or text_controller.hovered == "decrease_speed" or text_controller.hovered == "stop_resume":
+                        if text_controller.hovered == "*2x":
+                            simulation_speed_controller.increase_double_speed()
+                        elif text_controller.hovered == "/2x":
+                            simulation_speed_controller.decrease_double_speed()
+                        elif text_controller.hovered == "double_increase_speed":
+                            simulation_speed_controller.double_increase_speed()
+                        elif text_controller.hovered == "double_decrease_speed":
+                            simulation_speed_controller.double_decrease_speed()
+                        elif text_controller.hovered == "increase_speed":
+                            simulation_speed_controller.increase_speed()
+                        elif text_controller.hovered == "decrease_speed":
+                            simulation_speed_controller.decrease_speed()
+                        elif text_controller.hovered == "stop_resume":
+                            if simulation_speed_controller.running:
+                                simulation_speed_controller.running = False
+                                draw_distance_from_zero(distance_from_zero)
+                            else:
+                                simulation_speed_controller.running = True
+
+                    else:
+                        # Submit Current State
+                        text_controller.submit()
+                        # Select New State
+                        text_controller.select()
                 else:
                     if text_controller.selected == 'select_position_x' or text_controller.select() == 'select_position_y':
                         text_controller.position_x_text = str(geographical_x_position)
@@ -94,7 +120,7 @@ while running:
     rect_size = [140, 40]
     # Buttons
     buttons = return_buttons(screen=screen, cursor_pos=cursor_pos, screen_size=screen_size, font=font,
-                             controller=text_controller)
+                             controller=text_controller, running=simulation_speed_controller.running)
 
     for button in buttons:
         if button is not None:
@@ -113,18 +139,26 @@ while running:
 
     # Updates Screen !
     pygame.display.flip()
-    new_objects = []
-    for pos, object in enumerate(objects):
-        new_object = object
+    if simulation_speed_controller.running:
+        i += 1
+        new_objects = []
+        for pos, object in enumerate(objects):
+            if distance_from_zero.get(object) is None:
+                distance_from_zero[object] = [[object.x, i]]
+            else:
+                current_distances = distance_from_zero[object]
+                current_distances.append([object.x, i])
+                distance_from_zero[object] = current_distances
+            new_object = object
 
-        for other_object in objects[:pos] + objects[pos + 1:]:
-            new_object.calculate_new_velocity(other_object, (tickrate * 100) // simulation_speed_controller.speed )
+            for other_object in objects[:pos] + objects[pos + 1:]:
+                new_object.calculate_new_velocity(other_object, (tickrate * 100) / simulation_speed_controller.speed )
 
-        new_objects.append(new_object)
-    else:
-        objects = new_objects
-    for object in objects:
-        object.change_position((tickrate * 100) // simulation_speed_controller.speed)
+            new_objects.append(new_object)
+        else:
+            objects = new_objects
+        for object in objects:
+            object.change_position((tickrate * 100) / simulation_speed_controller.speed)
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
 
 pygame.quit()

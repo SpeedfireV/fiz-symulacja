@@ -60,7 +60,7 @@ class SpaceObject:
         self.velocity = velocity
         self.angle = angle * math.pi
         self.G = gravitational_constant
-        self.color = Color(random.randint(0, 85), random.randint(86, 170), random.randint(171, 255))
+        self.color = Color(random.randint(0, 255), random.randint(60, 220), random.randint(0, 255))
 
     def __str__(self):
         return (
@@ -91,6 +91,7 @@ class SpaceObject:
         resultant_velocity = sqrt(resultant_x_velocity ** 2 + resultant_y_velocity ** 2)
         self.velocity, self.angle = resultant_velocity, resultant_angle
 
-    def change_position(self, fps):
-        self.x = self.x + self.velocity * math.cos(self.angle) / fps
-        self.y = self.y + self.velocity * math.sin(self.angle) / fps
+    def change_position(self, simultion_speed:float):
+        print(f"FPS is {simultion_speed}")
+        self.x = self.x + self.velocity * math.cos(self.angle) / simultion_speed
+        self.y = self.y + self.velocity * math.sin(self.angle) / simultion_speed
