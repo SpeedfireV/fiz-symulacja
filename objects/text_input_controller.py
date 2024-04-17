@@ -79,7 +79,23 @@ class TextInputController:
             self.fulfilled = False
 
     def return_object(self):
-        return SpaceObject(name=self.name_text, x=int(self.position_x_text), y=int(self.position_y_text), mass=float(self.mass_text), velocity=float(self.velocity_text),angle=float(self.angle_text))
+        if self.scale_position_x_text != "":
+            x_scale = int(self.scale_position_x_text)
+        else:
+            x_scale = 0
+        if self.scale_position_y_text != "":
+            y_scale = int(self.scale_position_y_text)
+        else:
+            y_scale = 0
+        if self.scale_velocity_text != "":
+            velocity_scale = int(self.scale_velocity_text)
+        else:
+            velocity_scale = 0
+        if self.scale_mass_text != "":
+            mass_scale = int(self.scale_mass_text)
+        else:
+            mass_scale = 0
+        return SpaceObject(name=self.name_text, x=int(self.position_x_text) * 10 ** x_scale, y=int(self.position_y_text) * 10 ** y_scale, mass=float(self.mass_text) * 10 ** mass_scale, velocity=float(self.velocity_text) * 10 ** velocity_scale,angle=float(self.angle_text))
 
     def reset(self):
         self.hovered = None
