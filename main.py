@@ -1,5 +1,5 @@
 import pygame
-from pygame import Color
+from pygame import Color, USEREVENT
 
 from buttons import return_buttons, render_text_simulation_speed
 from calculate_geographical_position import calculate_geographical_position
@@ -41,7 +41,13 @@ simulation_speed_controller = SimulationController()
 i = 1
 
 distance_from_zero = {}
+def println():
+    print("Hello World")
 
+RECORD_OBJECTS = USEREVENT + 1
+
+pygame.time.set_timer(RECORD_OBJECTS,10)
+time = 0
 while running:
     cursor_pos = pygame.mouse.get_pos()
     x_cursor_pos, y_cursor_pos = cursor_pos[0], cursor_pos[1]
@@ -50,6 +56,17 @@ while running:
                                                                                        x_cursor_pos, y_cursor_pos,
                                                                                        x_border, y_border)
     for event in pygame.event.get():
+        if event.type == RECORD_OBJECTS:
+            time += 1
+            for object in objects:
+                if distance_from_zero.get(object) is None:
+                    distance_from_zero[object] = [[object.x, time]]
+                else:
+                    current_distances = distance_from_zero[object]
+                    current_distances.append([object.x, time])
+                    distance_from_zero[object] = current_distances
+
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 if text_controller.hovered is not None:
@@ -140,25 +157,22 @@ while running:
     # Updates Screen !
     pygame.display.flip()
     if simulation_speed_controller.running:
-        i += 1
-        new_objects = []
-        for pos, object in enumerate(objects):
-            if distance_from_zero.get(object) is None:
-                distance_from_zero[object] = [[object.x, i]]
+        for n in range(simulation_speed_controller.speed):
+            i += 1
+            new_objects = []
+            for pos, object in enumerate(objects):
+                new_object = object
+                for other_object in objects[:pos] + objects[pos + 1:]:
+                    new_object.calculate_new_velocity(other_object, tickrate * 100)
+
+                new_objects.append(new_object)
             else:
-                current_distances = distance_from_zero[object]
-                current_distances.append([object.x, i])
-                distance_from_zero[object] = current_distances
-            new_object = object
+                objects = new_objects
+            for object in objects:
+                object.change_position(tickrate * 100)
 
-            for other_object in objects[:pos] + objects[pos + 1:]:
-                new_object.calculate_new_velocity(other_object, (tickrate * 100) / simulation_speed_controller.speed )
-
-            new_objects.append(new_object)
-        else:
-            objects = new_objects
-        for object in objects:
-            object.change_position((tickrate * 100) / simulation_speed_controller.speed)
+    else:
+        distance_from_zero = {}
     clock.tick(tickrate)  # Limits FPS To The Maximum Tickrate
 
 pygame.quit()

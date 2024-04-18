@@ -92,6 +92,5 @@ class SpaceObject:
         self.velocity, self.angle = resultant_velocity, resultant_angle
 
     def change_position(self, simultion_speed:float):
-        print(f"FPS is {simultion_speed}")
         self.x = self.x + self.velocity * math.cos(self.angle) / simultion_speed
         self.y = self.y + self.velocity * math.sin(self.angle) / simultion_speed

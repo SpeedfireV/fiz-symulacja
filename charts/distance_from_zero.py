@@ -7,7 +7,6 @@ from objects.space_object import SpaceObject
 def draw_distance_from_zero(objects:dict[SpaceObject, list]):
     objects_name = []
     objects_distance = {}
-    print( objects)
     for object, multiple_info in objects.items():
         for info in multiple_info:
             if objects_distance.get(object.name) is None:
