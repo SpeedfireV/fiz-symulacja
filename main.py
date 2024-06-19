@@ -6,6 +6,7 @@ from calculate_geographical_position import calculate_geographical_position
 from charts.distance_from_zero import draw_distance_from_zero
 from entering_text import entering_numbers
 from objects.simulation_controller import SimulationController
+from objects.space_object import SpaceObject
 from objects.text_input_controller import TextInputController
 from visual_elements.render_planets import render_planets
 from visual_elements.scale_size import render_space_scale
@@ -48,6 +49,24 @@ RECORD_OBJECTS = USEREVENT + 1
 
 pygame.time.set_timer(RECORD_OBJECTS,10)
 time = 0
+file_data = []
+with open("input.txt", "r") as file:
+    lines = file.readlines()[1:]
+    for line in lines:
+        if line.strip() != []:
+            data = line.split(" ")
+            name = data[0]
+            velocity = float(data[1])
+            mass = str(data[2])
+            if mass.find("^") != -1:
+                mass = float(mass[0:mass.find("^")]) * 10 ** int(mass[mass.find("^") + 1:])
+            else:
+                mass = int(mass)
+            angle = float(data[3])
+            x = int(data[4])
+            y = int(data[5])
+            objects.append(SpaceObject(name, x, y, mass, velocity, angle))
+    file.close()
 while running:
     cursor_pos = pygame.mouse.get_pos()
     x_cursor_pos, y_cursor_pos = cursor_pos[0], cursor_pos[1]
@@ -157,19 +176,33 @@ while running:
     # Updates Screen !
     pygame.display.flip()
     if simulation_speed_controller.running:
-        for n in range(simulation_speed_controller.speed):
-            i += 1
-            new_objects = []
-            for pos, object in enumerate(objects):
-                new_object = object
-                for other_object in objects[:pos] + objects[pos + 1:]:
-                    new_object.calculate_new_velocity(other_object, tickrate * 100)
+        if simulation_speed_controller.speed < 16000:
+            for n in range(simulation_speed_controller.speed):
 
-                new_objects.append(new_object)
-            else:
-                objects = new_objects
-            for object in objects:
-                object.change_position(tickrate * 100)
+                new_objects = []
+                for pos, object in enumerate(objects):
+                    new_object = object
+                    for other_object in objects[:pos] + objects[pos + 1:]:
+                        new_object.calculate_new_velocity(other_object, tickrate * 100)
+
+                    new_objects.append(new_object)
+                else:
+                    objects = new_objects
+                for object in objects:
+                    object.change_position(tickrate * 100)
+        else:
+            for n in range(16000):
+                new_objects = []
+                for pos, object in enumerate(objects):
+                    new_object = object
+                    for other_object in objects[:pos] + objects[pos + 1:]:
+                        new_object.calculate_new_velocity(other_object, tickrate * 100 / (simulation_speed_controller.speed // 16000))
+
+                    new_objects.append(new_object)
+                else:
+                    objects = new_objects
+                for object in objects:
+                    object.change_position(tickrate * 100)
 
     else:
         distance_from_zero = {}

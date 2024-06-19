@@ -1,7 +1,7 @@
 
 class SimulationController:
     def __init__(self):
-        self.running = True
+        self.running = False
         self.speed = 100 # max 1000000
 
     def increase_speed(self):

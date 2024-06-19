@@ -16,7 +16,6 @@ def draw_distance_from_zero(objects:dict[SpaceObject, list]):
                 objects_distance[object.name][info[1]] = int(info[0])
     fig, ax = plt.subplots(1,1)
     for name in objects_distance.keys():
-        print(objects_distance)
         x_values = []
         y_values = []
         for k, v in objects_distance[name].items():
